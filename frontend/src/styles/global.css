@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap');
+
+/* =================================
+   COZY GARDEN - NAVBAR
+================================= */
+
+/* 1. Main Navbar Container */
+.navbar {
+    background-color: #c8e7fd;
+    width: 100%;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    border-bottom: 1px solid #E5E0D5;
+    box-sizing: border-box;
+
+}
+
+/* 2. Brand / Logo */
+.navbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 22px;
+    font-weight: 900;
+    color: #5a351f;
+    font-family: "Cooper Black", "Arial Rounded MT Bold", "Comic Sans MS", cursive;
+    text-shadow: none;
+    -webkit-text-stroke: 0.8px currentColor;
+    text-decoration: none;
+
+}
+
+.navbar-logo svg {
+    color: #3b8a0f;
+    width: 40px;
+    height: 40px;
+}
+
+.navbar-logo img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+
+/* 3. Navigation Links Container */
+.navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* 4. Individual Navigation Link */
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    color: #5a351f;
+    font-family: "Fredoka", sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    text-shadow: none;
+    -webkit-text-stroke: 0.6px currentColor;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+/* 5. Active Navigation Link */
+.nav-link.active {
+    background-color: #EAF3E4;
+    color: #5a351f;
+}
+
+/* 6. Hover State */
+.nav-link:hover {
+    background-color: #F0F5EB;
+    color: #5a351f;
+}
+
+/* 7. Navigation Icons */
+.nav-link svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* 8. Logout Button */
+.navbar-logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: #51483F;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.navbar-logout:hover {
+    background-color: #FCE8E7;
+    color: #EF5350;
+}
+
+/* 9. Mobile Menu Toggle */
+.menu-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    background: transparent;
+    border: none;
+    color: #2E7D32;
+    cursor: pointer;
+}
+
+/* 10. Responsive Design */
+@media (max-width: 768px) {
+
+    .navbar {
+        padding: 0 16px;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+
+    .navbar-links {
+        display: none;
+        position: absolute;
+        top: 72px;
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 5px;
+        padding: 16px;
+        background-color: #FFFFFF;
+        border-bottom: 1px solid #E5E0D5;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    .navbar-links.open {
+        display: flex;
+    }
+
+    .nav-link {
+        padding: 12px;
+    }
+}

@@ -1,0 +1,180 @@
+.shop-page {
+  min-height: 100svh;
+  color: #56321f;
+  background: #f5f8f2;
+  font-family: "Baloo 2", cursive;
+}
+
+.shop-content {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  padding: 38px 28px 56px;
+  box-sizing: border-box;
+}
+
+.shop-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.shop-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: #56321f;
+  font-family: "Baloo 2", cursive;
+  font-size: clamp(2.4rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.shop-title img {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.shop-subtitle {
+  margin: 8px 0 0;
+  color: #56321f;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.coin-balance {
+  display: flex;
+  min-width: 150px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid #d6c6b5;
+  border-radius: 16px;
+  padding: 10px 18px;
+  color: #56321f;
+  background: #fffdf8;
+  box-shadow: 0 4px 10px rgba(86, 50, 31, 0.12);
+  font-size: 1.7rem;
+  font-weight: 700;
+}
+
+.coin-balance img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.shop-message {
+  margin: -12px 0 18px;
+  color: #2e8b35;
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.seed-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.seed-card {
+  display: flex;
+  min-height: 300px;
+  align-items: center;
+  border: 2px solid #d2cbc4;
+  border-radius: 20px;
+  padding: 22px 18px 16px;
+  box-sizing: border-box;
+  flex-direction: column;
+  background: rgba(255, 253, 248, 0.96);
+  box-shadow: 0 5px 14px rgba(86, 50, 31, 0.1);
+  text-align: center;
+}
+
+.seed-image {
+  width: 76px;
+  height: 76px;
+  margin-bottom: 8px;
+  object-fit: contain;
+}
+
+.seed-name {
+  margin: 0;
+  color: #56321f;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.seed-growth {
+  margin: 7px 0 8px;
+  color: #596075;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.seed-price {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  color: #56321f;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.seed-price img {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.seed-buy-button {
+  width: min(100%, 150px);
+  min-height: 42px;
+  margin-top: auto;
+  border-radius: 12px;
+  padding: 8px 18px;
+  font-family: "Baloo 2", cursive;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+@media (max-width: 800px) {
+  .seed-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .shop-content {
+    padding: 28px 16px 40px;
+  }
+
+  .shop-header {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 24px;
+  }
+
+  .shop-title {
+    font-size: 2.5rem;
+  }
+
+  .shop-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .coin-balance {
+    align-self: flex-end;
+  }
+
+  .seed-grid {
+    grid-template-columns: 1fr;
+  }
+}
