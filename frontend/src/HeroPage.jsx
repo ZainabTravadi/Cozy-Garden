@@ -33,7 +33,11 @@ function HeroPage() {
             <Gamepad2 aria-hidden="true" size={26} />
             Play Now
           </button>
-          <button className="hero-button hero-button-secondary" type="button">
+          <button
+            className="hero-button hero-button-secondary"
+            onClick={() => navigate("/how-to-play")}
+            type="button"
+          >
             <Info aria-hidden="true" size={26} />
             How to Play
           </button>

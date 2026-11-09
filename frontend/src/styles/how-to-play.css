@@ -1,0 +1,205 @@
+.how-to-play-page {
+  min-height: 100svh;
+  overflow-x: hidden;
+  color: #56321f;
+  background: #eaf5e3;
+  font-family: "Baloo 2", cursive;
+}
+
+.how-to-play-content {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 22px 18px 48px;
+  box-sizing: border-box;
+}
+
+.how-to-play-board {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1672 / 941;
+  overflow: hidden;
+  border-radius: 24px;
+  background-position: center;
+  background-size: 100% 100%;
+  box-shadow: 0 12px 30px rgba(58, 95, 37, 0.2);
+}
+
+.how-to-play-panel {
+  position: absolute;
+  top: 5%;
+  right: 4.5%;
+  display: flex;
+  width: 41%;
+  height: 90%;
+  overflow-y: auto;
+  flex-direction: column;
+  gap: 14px;
+  border: 2px solid #56321f;
+  border-radius: 22px;
+  padding: 18px;
+  box-sizing: border-box;
+  background: rgba(255, 253, 248, 0.97);
+  box-shadow: 0 12px 25px rgba(48, 34, 25, 0.22);
+}
+
+.how-to-play-back {
+  min-height: 42px;
+  padding: 7px 14px;
+  font-size: 1rem;
+}
+
+.how-to-play-top-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.how-to-play-scroll-button {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid #987b66;
+  border-radius: 12px;
+  padding: 5px 9px;
+  color: #56321f;
+  background: #f7eee3;
+  cursor: pointer;
+  font: 700 0.8rem "Baloo 2", cursive;
+}
+
+.how-to-play-scroll-button:hover {
+  background: #eadbc9;
+}
+
+.how-to-play-heading {
+  text-align: center;
+}
+
+.how-to-play-heading img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.how-to-play-heading h1 {
+  margin: 0;
+  color: #56321f;
+  font-size: clamp(1.55rem, 2.4vw, 2.25rem);
+  line-height: 1.05;
+}
+
+.how-to-play-heading p,
+.how-to-play-panel p {
+  margin: 4px 0 0;
+  font-weight: 600;
+  text-align: left;
+  line-height: 1.35;
+}
+
+.how-to-play-panel section {
+  border-top: 1px solid #eadbc9;
+  padding-top: 10px;
+}
+
+.how-to-play-panel h2 {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  justify-content: center;
+  margin: 0;
+  color: #56321f;
+  font-size: 1.2rem;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.how-to-play-panel h2 svg {
+  color: #358b32;
+}
+
+.how-to-play-panel ol {
+  margin: 7px 0 0;
+  padding-left: 22px;
+  text-align: left;
+}
+
+.how-to-play-panel li {
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.growth-duration-list,
+.achievement-guide-list {
+  display: grid;
+  gap: 4px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.growth-duration-list li,
+.achievement-guide-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  border-radius: 7px;
+  padding: 4px 7px;
+  background: #f7eee3;
+}
+
+.growth-duration-list span,
+.achievement-guide-list span {
+  text-align: right;
+}
+
+.how-to-play-bottom-back {
+  width: 100%;
+  min-height: 48px;
+  margin-top: auto;
+  padding: 9px 14px;
+  font-size: 1rem;
+}
+
+@media (max-width: 800px) {
+  .how-to-play-board {
+    min-height: 0;
+    overflow: visible;
+    margin-bottom: 18px;
+    aspect-ratio: 1672 / 941;
+    background-size: 100% 100%;
+  }
+
+  .how-to-play-panel {
+    position: absolute;
+    top: calc(100% + 18px);
+    right: auto;
+    left: 0;
+    width: 100%;
+    height: auto;
+    max-height: none;
+  }
+
+  .how-to-play-content {
+    padding-bottom: 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .how-to-play-panel {
+    padding: 14px;
+  }
+
+  .growth-duration-list li,
+  .achievement-guide-list li {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .growth-duration-list span,
+  .achievement-guide-list span {
+    text-align: left;
+  }
+}

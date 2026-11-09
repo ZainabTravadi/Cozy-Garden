@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
     House,
     ShoppingCart,
@@ -13,10 +13,13 @@ import {
 import seedImage from "../assets/seed.png";
 import '../styles/global.css';
 import '../styles/components.css';
+import { useAuth } from "../context/useAuth";
 
 function Navbar() {
 
     const [menuOpen, setMenuOpen] = useState(false);
+    const { logout } = useAuth();
+    const navigate = useNavigate();
 
     return (
         <header className="navbar">
@@ -38,7 +41,7 @@ function Navbar() {
             {/* Navigation Links */}
             <nav className={`navbar-links ${menuOpen ? "open" : ""}`}>
 
-                <NavLink to="/game" className="nav-link">
+                <NavLink to="/garden" className="nav-link">
                     <House size={18} />
                     Garden
                 </NavLink>
@@ -58,7 +61,19 @@ function Navbar() {
                     Profile
                 </NavLink>
 
-                <button className="navbar-logout">
+                <button
+                    className="navbar-logout"
+                    onClick={async () => {
+                        try {
+                            await logout();
+                        } catch (error) {
+                            console.error("Unable to clear the server session:", error);
+                        } finally {
+                            navigate("/", { replace: true });
+                        }
+                    }}
+                    type="button"
+                >
                     <LogOut size={18} />
                 </button>
 

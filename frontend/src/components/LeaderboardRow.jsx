@@ -1,4 +1,3 @@
-import coinImage from "../assets/gold-coin.png";
 import bronzeCrown from "../assets/bronze-crown.png";
 import goldCrown from "../assets/gold-crown.png";
 import silverCrown from "../assets/silver-crown.png";
@@ -11,10 +10,11 @@ const crownImages = {
 
 function LeaderboardRow({
   avatar,
+  avatarData,
   avatarColor,
-  coins,
   crown,
   currentUser = false,
+  experiencePoints,
   level,
   name,
   rank,
@@ -34,14 +34,13 @@ function LeaderboardRow({
       </div>
       <div className="leaderboard-player">
         <span className="player-avatar" style={{ backgroundColor: avatarColor }}>
-          {avatar}
+          {avatarData ? <img alt="" src={avatarData} /> : avatar}
         </span>
         <span>{name}</span>
       </div>
       <div className="leaderboard-level">Lv. {level}</div>
-      <div className="leaderboard-coins">
-        <img src={coinImage} alt="" />
-        <span>{coins.toLocaleString()}</span>
+      <div className="leaderboard-xp">
+        <span>{experiencePoints.toLocaleString()} XP</span>
       </div>
     </article>
   );

@@ -1,0 +1,37 @@
+export function toPublicUser(user) {
+  const progress = {
+    "first-steps": `${user.totalCropsPlanted || 0} / 1`,
+    "little-gardener": `${user.cropsHarvested || 0} / 10`,
+    "flower-power": `${user.flowersHarvested || 0} / 10`,
+    "coin-collector": `${user.lifetimeCoinsEarned || 0} / 5,000`,
+    "seed-hoarder": `${user.lifetimeSeedsPurchased || 0} / 10`,
+    "fresh-start": `${user.currentDailyStreak || 0} / 3 days`,
+    "dedicated-gardener": `${user.currentDailyStreak || 0} / 7 days`,
+    "harvest-hero": `${user.cropsHarvested || 0} / 50`,
+    "garden-champion": user.achievements?.includes("garden-champion") ? "Achieved" : "Not achieved",
+    "master-gardener": `${Math.min((user.achievements || []).filter((id) => id !== "master-gardener").length, 9)} / 9 achievements`,
+  };
+  return {
+    id: user._id.toString(),
+    username: user.username,
+    avatarData: user.avatarData || "",
+    email: user.email,
+    level: user.level,
+    experiencePoints: user.experiencePoints,
+    coins: user.coins,
+    inventory: user.inventory,
+    garden: user.garden,
+    achievements: user.achievements,
+    achievementUnlockDates: user.achievementUnlockDates || {},
+    cropsHarvested: user.cropsHarvested,
+    totalCropsPlanted: user.totalCropsPlanted,
+    flowersHarvested: user.flowersHarvested,
+    lifetimeCoinsEarned: user.lifetimeCoinsEarned,
+    lifetimeSeedsPurchased: user.lifetimeSeedsPurchased,
+    currentDailyStreak: user.currentDailyStreak,
+    xpProgress: user.experiencePoints % 100,
+    xpToNextLevel: 100,
+    achievementProgress: progress,
+    hasSeenGardenWelcome: user.hasSeenGardenWelcome,
+  };
+}

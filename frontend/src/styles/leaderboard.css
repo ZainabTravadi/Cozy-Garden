@@ -79,7 +79,7 @@
 .leaderboard-table-header span:nth-child(3),
 .leaderboard-table-header span:nth-child(4),
 .leaderboard-level,
-.leaderboard-coins {
+.leaderboard-xp {
   text-align: left;
 }
 
@@ -143,22 +143,22 @@
   font-weight: 800;
 }
 
+.player-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
 .leaderboard-level,
-.leaderboard-coins {
+.leaderboard-xp {
   white-space: nowrap;
 }
 
-.leaderboard-coins {
+.leaderboard-xp {
   display: flex;
   align-items: center;
-  gap: 8px;
   font-weight: 700;
-}
-
-.leaderboard-coins img {
-  width: 26px;
-  height: 26px;
-  object-fit: contain;
 }
 
 @media (max-width: 700px) {
@@ -215,12 +215,7 @@
     height: 38px;
   }
 
-  .leaderboard-coins {
-    gap: 4px;
-  }
-
-  .leaderboard-coins img {
-    width: 21px;
-    height: 21px;
+  .leaderboard-xp {
+    font-size: 0.9rem;
   }
 }

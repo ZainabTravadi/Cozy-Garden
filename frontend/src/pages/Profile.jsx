@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ImagePlus, Pencil, X } from "lucide-react";
 import Navbar from "../components/Navbar";
 import AchievementCard from "../components/AchievementCard";
@@ -12,25 +12,39 @@ import levelImage from "../assets/golden-star-level.png";
 import goldenSproutImage from "../assets/golden-sprout_first-steps_Your-Stats.png";
 import "../HeroPage.css";
 import "../styles/profile.css";
-
-const stats = [
-  { label: "Coins", value: "1,250", icon: coinImage },
-  { label: "Seeds", value: "24", icon: seedImage },
-  { label: "Crops Harvested", value: "68", icon: cropsImage },
-  { label: "Level", value: "5", icon: levelImage },
-];
+import { apiRequest } from "../services/api";
+import { useAuth } from "../context/useAuth";
 
 function Profile() {
-  const xp = 420;
-  const maxXp = 500;
+  const { user: authUser, updateUser } = useAuth();
+  const [profile, setProfile] = useState(authUser);
+  const xp = profile.xpProgress ?? profile.experiencePoints % 100;
+  const maxXp = profile.xpToNextLevel || 100;
   const xpPercentage = (xp / maxXp) * 100;
-  const [username, setUsername] = useState("Jennie");
-  const [profileImage, setProfileImage] = useState("");
+  const [username, setUsername] = useState(authUser.username ?? "");
+  const [profileImage, setProfileImage] = useState(authUser.avatarData ?? "");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [draftUsername, setDraftUsername] = useState(username);
+  const [draftUsername, setDraftUsername] = useState(authUser.username ?? "");
   const [draftImage, setDraftImage] = useState(profileImage);
   const [validationMessage, setValidationMessage] = useState("");
   const [selectedAchievement, setSelectedAchievement] = useState(null);
+  const [profileError, setProfileError] = useState("");
+
+  useEffect(() => {
+    apiRequest("/player/profile").then((nextProfile) => {
+      setProfile(nextProfile);
+      setUsername(nextProfile.username);
+      setProfileImage(nextProfile.avatarData ?? "");
+      updateUser(nextProfile);
+    }).catch((error) => setProfileError(error.message));
+  }, [updateUser]);
+
+  const stats = [
+    { label: "Coins", value: profile.coins.toLocaleString(), icon: coinImage },
+    { label: "Seeds", value: profile.totalSeeds?.toLocaleString() || "0", icon: seedImage },
+    { label: "Crops Harvested", value: profile.cropsHarvested.toLocaleString(), icon: cropsImage },
+    { label: "Level", value: profile.level.toString(), icon: levelImage },
+  ];
 
   const openDialog = () => {
     setDraftUsername(username);
@@ -57,6 +71,10 @@ function Profile() {
       setValidationMessage("Please select a PNG, JPG, or JPEG image.");
       return;
     }
+    if (file.size > 2 * 1024 * 1024) {
+      setValidationMessage("Please select an image smaller than 2 MB.");
+      return;
+    }
 
     const reader = new FileReader();
     reader.onload = () => setDraftImage(reader.result);
@@ -67,7 +85,7 @@ function Profile() {
     setValidationMessage("");
   };
 
-  const saveChanges = () => {
+  const saveChanges = async () => {
     const nextUsername = draftUsername.trim();
 
     if (!nextUsername) {
@@ -75,16 +93,27 @@ function Profile() {
       return;
     }
 
-    setUsername(nextUsername);
-    setProfileImage(draftImage);
-    setIsDialogOpen(false);
-    setValidationMessage("");
+    try {
+      const result = await apiRequest("/player/profile", {
+        method: "PATCH",
+        body: JSON.stringify({ username: nextUsername, avatarData: draftImage }),
+      });
+      setProfile(result.user);
+      updateUser(result.user);
+      setUsername(result.user.username);
+      setProfileImage(result.user.avatarData ?? "");
+      setIsDialogOpen(false);
+      setValidationMessage("");
+    } catch (error) {
+      setValidationMessage(error.message);
+    }
   };
 
   return (
     <div className="profile-page">
       <Navbar />
       <main className="profile-content">
+        {profileError && <p role="alert">{profileError}</p>}
         <header className="profile-header">
           <div className="profile-avatar" aria-label={`${username} avatar`}>
             {profileImage ? (
@@ -95,7 +124,7 @@ function Profile() {
           </div>
           <div className="profile-summary">
             <h1>{username}</h1>
-            <p>Level 5</p>
+            <p>Level {profile.level}</p>
             <div className="xp-row">
               <div className="xp-track" aria-label={`${xp} of ${maxXp} XP`}>
                 <span style={{ width: `${xpPercentage}%` }} />
@@ -131,9 +160,11 @@ function Profile() {
           <div className="achievements-grid">
             {achievements.map((achievement) => (
               <AchievementCard
+                {...achievement}
                 key={achievement.id}
                 onShare={setSelectedAchievement}
-                {...achievement}
+                progress={profile.achievementProgress?.[achievement.id] || "0 / 1"}
+                unlocked={profile.achievements.includes(achievement.id)}
               />
             ))}
           </div>
@@ -142,7 +173,7 @@ function Profile() {
       {selectedAchievement && (
         <AchievementShareModal
           achievement={selectedAchievement}
-          level={5}
+          level={profile.level}
           onClose={() => setSelectedAchievement(null)}
           username={username}
         />

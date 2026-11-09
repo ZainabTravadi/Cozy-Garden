@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Eye,
   EyeOff,
@@ -10,6 +10,7 @@ import {
 import meadowBackground from "./assets/Pixel Countryside Cottage Meadow.png";
 import seedImage from "./assets/seed.png";
 import "./AuthPage.css";
+import { useAuth } from "./context/useAuth";
 
 const initialLoginValues = {
   identifier: "",
@@ -46,7 +47,7 @@ function AuthField({
         onChange={onChange}
         placeholder={label}
         type={inputType}
-        value={value}
+        value={value ?? ""}
       />
       {type === "password" && (
         <button
@@ -69,6 +70,9 @@ function AuthPage({ mode }) {
   );
   const [errors, setErrors] = useState([]);
   const [visiblePasswords, setVisiblePasswords] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const { login, signup } = useAuth();
+  const navigate = useNavigate();
 
   const updateValue = (event) => {
     const { name, value } = event.target;
@@ -106,9 +110,22 @@ function AuthPage({ mode }) {
     return nextErrors;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    setErrors(validate());
+    const validationErrors = validate();
+    if (validationErrors.length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await (isLogin ? login(values) : signup(values));
+      navigate("/garden");
+    } catch (error) {
+      setErrors([error.message]);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -212,8 +229,8 @@ function AuthPage({ mode }) {
               </p>
             )}
 
-            <button className="auth-submit" type="submit">
-              {isLogin ? "Login" : "Create Account"}
+            <button className="auth-submit" disabled={submitting} type="submit">
+              {submitting ? "Please wait..." : isLogin ? "Login" : "Create Account"}
             </button>
           </form>
 

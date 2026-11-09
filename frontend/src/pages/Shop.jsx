@@ -1,23 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import SeedCard from "../components/SeedCard";
 import coinImage from "../assets/gold-coin.png";
 import seedImage from "../assets/seed.png";
-import seeds from "../data/seeds";
+import seedsData from "../data/seeds";
+import { apiRequest } from "../services/api";
+import { useAuth } from "../context/useAuth";
 import "../styles/shop.css";
 
 function Shop() {
-  const [balance, setBalance] = useState(1250);
+  const { user, updateUser } = useAuth();
+  const [seeds, setSeeds] = useState(seedsData);
+  const [balance, setBalance] = useState(user.coins);
   const [message, setMessage] = useState("");
 
-  const handleBuy = (seed) => {
-    if (balance < seed.price) {
-      setMessage("Not enough coins!");
-      return;
-    }
+  useEffect(() => {
+    apiRequest("/shop/seeds")
+      .then(({ seeds: availableSeeds }) => setSeeds(availableSeeds.map((seed) => ({
+        ...seed,
+        image: seedsData.find((localSeed) => localSeed.id === seed.id)?.image,
+      }))))
+      .catch((error) => setMessage(error.message));
+  }, []);
 
-    setBalance((currentBalance) => currentBalance - seed.price);
-    setMessage(`${seed.name} purchased!`);
+  const handleBuy = async (seed) => {
+    try {
+      const result = await apiRequest("/shop/purchase", {
+        method: "POST",
+        body: JSON.stringify({ seedId: seed.id, quantity: 1 }),
+      });
+      setBalance(result.user.coins);
+      updateUser(result.user);
+      setMessage(`${seed.name} purchased!`);
+    } catch (error) {
+      setMessage(error.message);
+    }
   };
 
   return (
