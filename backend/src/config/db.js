@@ -8,3 +8,11 @@ export async function connectDatabase() {
   await mongoose.connect(uri);
   return mongoose.connection;
 }
+
+mongoose.connection.on("disconnected", () => {
+  console.error("MongoDB disconnected.");
+});
+
+mongoose.connection.on("error", (error) => {
+  console.error("MongoDB connection error:", error.message);
+});

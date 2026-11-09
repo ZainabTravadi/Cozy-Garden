@@ -1,0 +1,10 @@
+{
+  "name": "cozy-garden-deployment",
+  "private": true,
+  "scripts": {
+    "heroku-postbuild": "npm --prefix backend install --omit=dev"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

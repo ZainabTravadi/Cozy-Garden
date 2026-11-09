@@ -9,14 +9,18 @@ import { createEmptyGarden } from "../utils/garden.js";
 const router = Router();
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const usernamePattern = /^[a-zA-Z0-9_]+$/;
+const authCookieAttributes = {
+  httpOnly: true,
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  secure: process.env.NODE_ENV === "production",
+};
+const authCookieOptions = {
+  ...authCookieAttributes,
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+};
 
 function setAuthCookie(res, token) {
-  res.cookie("token", token, {
-    httpOnly: true,
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+  res.cookie("token", token, authCookieOptions);
 }
 
 function validateCredentials({ username, email, password, confirmPassword }) {
@@ -95,7 +99,7 @@ router.post("/login", async (req, res, next) => {
 router.get("/me", requireAuth, (req, res) => res.json({ user: toPublicUser(req.user) }));
 
 router.post("/logout", (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", authCookieAttributes);
   res.status(204).end();
 });
 
