@@ -1,5 +1,11 @@
 # Cozy Garden deployment
 
+## Current deployment references
+
+- Frontend: `https://cozy-garden-three.vercel.app/`
+- API: `https://cozy-garden-backend-41e83e1826bf.herokuapp.com/api`
+- These URLs were read from the README and deployed JavaScript bundle. On 14 November 2026, the frontend returned 404 for nested pages and new SEO files; the API health endpoint reported MongoDB connected. Deploy the checked-in frontend configuration before expecting those files and refresh routes to work live.
+
 ## Required environment variables
 
 ### Heroku backend
@@ -13,6 +19,7 @@
 ### Vercel frontend
 
 - `VITE_API_URL`: deployed Heroku API URL including `/api`, such as `https://cozy-garden-api.example.com/api`
+- `VITE_GA_MEASUREMENT_ID` (optional): GA4 web stream ID (`G-...`). Leave unset to keep analytics and the consent prompt disabled.
 
 Only variables prefixed with `VITE_` are exposed to browser code. Do not put backend secrets in Vercel.
 
@@ -41,7 +48,8 @@ The server connects to MongoDB before listening, exits on startup failure, and c
 2. Set the project root directory to `frontend`.
 3. Use `npm run build` as the build command and `dist` as the output directory.
 4. Set `VITE_API_URL` to the Heroku URL ending in `/api`.
-5. Deploy. `frontend/vercel.json` rewrites client-side routes to `index.html` so refreshes do not produce Vercel 404 responses.
+5. Optionally set `VITE_GA_MEASUREMENT_ID` after setting up GA4 and reviewing analytics consent and privacy details.
+6. Deploy. `frontend/vercel.json` rewrites client-side routes to `index.html` and adds basic browser security headers.
 
 ## Connect and smoke-test both deployments
 

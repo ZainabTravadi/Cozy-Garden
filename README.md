@@ -32,6 +32,9 @@ The game is designed for relaxed, asynchronous play: crops continue growing whil
 - **Achievements:** Ten milestones cover planting, harvesting, flowers, coins, seed purchases, daily activity, leaderboard position, and achievement collection.
 - **Player profile:** View progress and stats, change your username, and save a PNG or JPEG avatar (up to 2 MB).
 - **Leaderboard:** Signed-in players are ranked by XP, then level, with a stable creation-time tie-break.
+- **Account control:** Players can permanently delete their account and game data from Profile after confirming their password.
+- **Privacy and support:** Public Privacy, Terms, and Contact pages explain current data use and mark owner details that must be supplied before launch.
+- **Optional analytics:** GA4 can be enabled with `VITE_GA_MEASUREMENT_ID`; the script loads only after consent. See [ANALYTICS.md](ANALYTICS.md).
 - **Sound effects:** Short planting and harvest sounds play after successful actions.
 - **Persistent progress:** MongoDB stores player, inventory, garden, progression, and achievement data.
 
@@ -56,7 +59,7 @@ Every crop in the game has three distinct sprites. The images below are the same
 4. Open your **Garden**, select an empty tile, choose a seed you own, and plant it.
 5. Let the crop grow. Its tile displays a countdown; the artwork changes halfway through and again when it is ready.
 6. Select a fully grown crop and harvest it to receive coins and XP. The tile becomes available for another seed.
-7. Visit your **Profile** to see stats and achievements, or the **Leaderboard** to see how gardeners rank.
+7. Visit your **Profile** to see stats and achievements, or the **Leaderboard** to see gardeners ranked by XP and level.
 
 A crop can also be removed after it reaches its second growth stage; removing it does not award harvest rewards.
 
@@ -177,6 +180,7 @@ Backend values belong in `backend/.env` (excluded from Git). The checked-in `.en
 | `CLIENT_ORIGIN` | Production | Exact browser origin allowed by credentialed CORS. Local default is `http://localhost:5173`. |
 | `NODE_ENV` | Production setup | Set to `production` to enable secure cross-site cookies and production proxy handling. |
 | `VITE_API_URL` | No | Frontend API base URL including `/api`; defaults to `http://localhost:5000/api`. |
+| `VITE_GA_MEASUREMENT_ID` | No | Optional GA4 measurement ID; analytics stays off until the visitor consents. |
 
 Example frontend override (use your own local or deployed API URL):
 
@@ -200,6 +204,7 @@ All API routes are prefixed with `/api`, except the readiness endpoints `/health
 | `GET` | `/api/player/profile` | Yes | Return player profile and stats, including `totalSeeds`. |
 | `PATCH` | `/api/player/profile` | Yes | Update username and optionally PNG/JPEG `avatarData` as a data URL (max 2 MB). |
 | `PATCH` | `/api/player/welcome` | Yes | Save that the first-garden welcome dialog was dismissed. |
+| `DELETE` | `/api/player/account` | Yes | Delete the authenticated account and its game data after password confirmation. |
 | `GET` | `/api/shop/seeds` | No | Return the server-side seed catalogue. |
 | `POST` | `/api/shop/purchase` | Yes | Buy seeds with `{ "seedId": "carrot", "quantity": 1 }` (quantity 1–100). |
 | `GET` | `/api/garden` | Yes | Return garden tiles, server time, crop status, and user data. |
@@ -208,7 +213,7 @@ All API routes are prefixed with `/api`, except the readiness endpoints `/health
 | `POST` | `/api/garden/remove` | Yes | Remove a crop after half its growth duration with `{ "tileId": 0 }`; no rewards. |
 | `GET` | `/api/leaderboard` | Yes | Return authenticated-user leaderboard entries ranked by XP, level, and account creation time. |
 
-Successful signup response shape is `{ "user": { ... } }`; harvest returns `{ "garden": [...], "serverTime": "…", "user": { ... }, "rewardCoins": 20, "rewardXp": 10 }`. For example, the shop catalogue response is `{ "seeds": [{ "id": "carrot", "name": "Carrot Seed", "price": 10, "growthTime": "1 hour 30 minutes" }] }`. Private password hashes are not included in public user data.
+Successful signup response shape is `{ "user": { ... } }`; harvest returns `{ "garden": [...], "serverTime": "…", "user": { ... }, "rewardCoins": 20, "rewardXp": 10 }`. For example, the shop catalogue response is `{ "seeds": [{ "id": "carrot", "name": "Carrot Seed", "price": 10, "growthTime": "1 hour 30 minutes" }] }`. Password hashes are not included in public user data. Leaderboard entries expose username, level, XP, rank, and whether the row belongs to the signed-in user; they do not expose coin balances, email addresses, or avatar data.
 
 ## 📈 Game Progression
 
@@ -247,9 +252,9 @@ The frontend package also provides `npm run lint` and `npm run build`; `npm run 
 
 ## 🌐 Deployment
 
-The repository's [deployment guide](DEPLOYMENT.md) describes the intended split deployment: the Vite frontend on Vercel, Express API on Heroku, and MongoDB Atlas for data. The root `Procfile` runs the backend, and the root postbuild script installs its production dependencies. Configure the API's `MONGODB_URI`, `JWT_SECRET`, and deployed `CLIENT_ORIGIN`; configure the frontend's `VITE_API_URL` to the API URL ending in `/api`.
+The repository's [deployment guide](DEPLOYMENT.md) describes the intended split deployment: the Vite frontend on Vercel, Express API on Heroku, and MongoDB Atlas for data. The currently referenced frontend is [cozy-garden-three.vercel.app](https://cozy-garden-three.vercel.app/) and its deployed bundle points to `https://cozy-garden-backend-41e83e1826bf.herokuapp.com/api`. A read-only smoke check on 14 November 2026 found the API healthy and database connected; the deployed frontend still returns 404 for nested pages and the newly added SEO assets until this change is deployed. The root `Procfile` runs the backend, and the root postbuild script installs its production dependencies. Configure the API's `MONGODB_URI`, `JWT_SECRET`, and deployed `CLIENT_ORIGIN`; configure the frontend's `VITE_API_URL` to the API URL ending in `/api`.
 
-The frontend's Vite configuration defines the React plugin; no Vercel rewrite configuration is present in the checked-in files. Confirm client-side route fallback behavior in the hosting project when deploying. For the deployed game, visit [cozy-garden-three.vercel.app](https://cozy-garden-three.vercel.app/).
+The frontend includes Vercel SPA fallback and security header configuration in `frontend/vercel.json`. For the deployed game, visit [cozy-garden-three.vercel.app](https://cozy-garden-three.vercel.app/); this repository cannot verify its live health.
 
 ## 🤝 Contributing
 

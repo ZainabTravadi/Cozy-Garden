@@ -11,6 +11,7 @@ import meadowBackground from "./assets/Pixel Countryside Cottage Meadow.png";
 import seedImage from "./assets/seed.png";
 import "./AuthPage.css";
 import { useAuth } from "./context/useAuth";
+import { trackEvent } from "./services/analytics";
 
 const initialLoginValues = {
   identifier: "",
@@ -118,8 +119,11 @@ function AuthPage({ mode }) {
       return;
     }
     setSubmitting(true);
+    if (!isLogin) trackEvent("registration_started");
     try {
       await (isLogin ? login(values) : signup(values));
+      trackEvent(isLogin ? "login_completed" : "registration_completed");
+      if (!isLogin) trackEvent("first_garden_created");
       navigate("/garden");
     } catch (error) {
       setErrors([error.message]);

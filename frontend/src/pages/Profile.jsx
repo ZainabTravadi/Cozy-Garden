@@ -14,9 +14,12 @@ import "../HeroPage.css";
 import "../styles/profile.css";
 import { apiRequest } from "../services/api";
 import { useAuth } from "../context/useAuth";
+import Seo from "../components/Seo";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
-  const { user: authUser, updateUser } = useAuth();
+  const { user: authUser, updateUser, deleteAccount } = useAuth();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState(authUser);
   const xp = profile.xpProgress ?? profile.experiencePoints % 100;
   const maxXp = profile.xpToNextLevel || 100;
@@ -29,6 +32,9 @@ function Profile() {
   const [validationMessage, setValidationMessage] = useState("");
   const [selectedAchievement, setSelectedAchievement] = useState(null);
   const [profileError, setProfileError] = useState("");
+  const [deletePassword, setDeletePassword] = useState("");
+  const [deleteMessage, setDeleteMessage] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     apiRequest("/player/profile").then((nextProfile) => {
@@ -111,6 +117,7 @@ function Profile() {
 
   return (
     <div className="profile-page">
+      <Seo title="Your Profile" description="Your Cozy Garden player profile and progress." path="/profile" noindex />
       <Navbar />
       <main className="profile-content">
         {profileError && <p role="alert">{profileError}</p>}
@@ -168,6 +175,20 @@ function Profile() {
               />
             ))}
           </div>
+        </section>
+        <section className="profile-section account-deletion" aria-labelledby="delete-account-title">
+          <h2 id="delete-account-title">Delete Account</h2>
+          <p>Permanently remove your account, garden, inventory, and progress.</p>
+          <label htmlFor="delete-account-password">Confirm your password</label>
+          <input id="delete-account-password" autoComplete="current-password" onChange={(event) => setDeletePassword(event.target.value)} type="password" value={deletePassword} />
+          <button disabled={!deletePassword || deleting} onClick={async () => {
+            if (!window.confirm("Delete your Cozy Garden account and all game progress? This cannot be undone.")) return;
+            setDeleting(true);
+            setDeleteMessage("");
+            try { await deleteAccount(deletePassword); navigate("/", { replace: true }); }
+            catch (error) { setDeleteMessage(error.message); setDeleting(false); }
+          }} type="button">{deleting ? "Deleting…" : "Permanently Delete Account"}</button>
+          {deleteMessage && <p role="alert">{deleteMessage}</p>}
         </section>
       </main>
       {selectedAchievement && (

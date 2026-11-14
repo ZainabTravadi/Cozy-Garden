@@ -52,4 +52,6 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
+userSchema.index({ experiencePoints: -1, level: -1, createdAt: 1, _id: 1 });
+
 export default mongoose.model("User", userSchema);

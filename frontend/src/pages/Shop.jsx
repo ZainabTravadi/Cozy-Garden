@@ -7,6 +7,8 @@ import seedsData from "../data/seeds";
 import { apiRequest } from "../services/api";
 import { useAuth } from "../context/useAuth";
 import "../styles/shop.css";
+import Seo from "../components/Seo";
+import { trackEvent } from "../services/analytics";
 
 function Shop() {
   const { user, updateUser } = useAuth();
@@ -24,6 +26,7 @@ function Shop() {
   }, []);
 
   const handleBuy = async (seed) => {
+    const isFirstPurchase = (user.lifetimeSeedsPurchased || 0) === 0;
     try {
       const result = await apiRequest("/shop/purchase", {
         method: "POST",
@@ -32,6 +35,10 @@ function Shop() {
       setBalance(result.user.coins);
       updateUser(result.user);
       setMessage(`${seed.name} purchased!`);
+      if (isFirstPurchase) trackEvent("first_seed_purchased", { seed_id: seed.id });
+      for (const achievementId of result.user.achievements || []) {
+        if (!(user.achievements || []).includes(achievementId)) trackEvent("achievement_unlocked", { achievement_id: achievementId });
+      }
     } catch (error) {
       setMessage(error.message);
     }
@@ -39,6 +46,7 @@ function Shop() {
 
   return (
     <div className="shop-page">
+      <Seo title="Seed Shop" description="Browse seeds for your Cozy Garden." path="/shop" noindex />
       <Navbar />
       <main className="shop-content">
         <header className="shop-header">

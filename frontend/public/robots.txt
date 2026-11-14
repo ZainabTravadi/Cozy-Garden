@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://cozy-garden-three.vercel.app/sitemap.xml

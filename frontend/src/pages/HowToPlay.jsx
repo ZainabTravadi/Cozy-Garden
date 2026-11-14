@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import gardenBackground from "../assets/Pixel Meadow Garden Plot.png";
 import seedImage from "../assets/seed.png";
 import "../styles/how-to-play.css";
+import Seo from "../components/Seo";
 
 const growthDurations = [
   ["Carrot", "1 hour 30 minutes"],
@@ -34,6 +35,7 @@ function HowToPlay() {
 
   return (
     <div className="how-to-play-page">
+      <Seo title="How to Play" description="Learn how to plant seeds, grow crops, harvest rewards, and earn achievements in Cozy Garden." path="/how-to-play" />
       <Navbar />
       <main className="how-to-play-content">
         <section
@@ -143,7 +145,7 @@ function HowToPlay() {
               <p>
                 Your Profile shows your username, avatar, level, XP, stats, and
                 achievements. The Leaderboard ranks gardeners by total XP and
-                level, and shows each player&apos;s profile information.
+                level, and shows each username and progress.
               </p>
             </section>
 

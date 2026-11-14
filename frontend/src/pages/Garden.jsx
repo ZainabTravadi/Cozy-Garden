@@ -12,6 +12,8 @@ import { apiRequest } from "../services/api";
 import { playHarvestSound, playPlantSound } from "../services/gameSounds";
 import "../styles/garden.css";
 import "../styles/profile.css";
+import Seo from "../components/Seo";
+import { trackEvent } from "../services/analytics";
 
 function Garden() {
   const { user, updateUser } = useAuth();
@@ -76,7 +78,12 @@ function Garden() {
     setWorking(true);
     setError("");
     try {
-      applyGardenResult(await plantSeed(selectedTileId, selectedSeedId), playPlantSound);
+      const result = await plantSeed(selectedTileId, selectedSeedId);
+      if (result.user.totalCropsPlanted === 1) trackEvent("first_crop_planted", { seed_id: selectedSeedId });
+      for (const achievementId of result.user.achievements || []) {
+        if (!(user.achievements || []).includes(achievementId)) trackEvent("achievement_unlocked", { achievement_id: achievementId });
+      }
+      applyGardenResult(result, playPlantSound);
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -89,7 +96,14 @@ function Garden() {
     setWorking(true);
     setError("");
     try {
-      applyGardenResult(await harvestCrop(selectedTileId), playHarvestSound, true);
+      const previous = user.cropsHarvested || 0;
+      const result = await harvestCrop(selectedTileId);
+      trackEvent("crop_harvested", { reward_coins: result.rewardCoins, reward_xp: result.rewardXp });
+      if (previous === 0) trackEvent("first_crop_harvested");
+      for (const achievementId of result.user.achievements || []) {
+        if (!(user.achievements || []).includes(achievementId)) trackEvent("achievement_unlocked", { achievement_id: achievementId });
+      }
+      applyGardenResult(result, playHarvestSound, true);
     } catch (requestError) {
       setError(requestError.message);
       if (requestError.message.includes("not ready")) {
@@ -138,6 +152,7 @@ function Garden() {
 
   return (
     <div className="garden-page">
+      <Seo title="Your Garden" description="Plant seeds and tend your Cozy Garden." path="/garden" noindex />
       <Navbar />
       <header className="garden-player-strip">
         <div className="garden-player-summary">

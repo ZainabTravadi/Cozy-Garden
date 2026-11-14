@@ -32,14 +32,18 @@ function Navbar() {
 
             {/* Mobile Menu Button */}
             <button
+                aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+                aria-expanded={menuOpen}
+                aria-controls="main-navigation"
                 className="menu-toggle"
                 onClick={() => setMenuOpen(!menuOpen)}
+                type="button"
             >
                 {menuOpen ? <X /> : <Menu />}
             </button>
 
             {/* Navigation Links */}
-            <nav className={`navbar-links ${menuOpen ? "open" : ""}`}>
+            <nav id="main-navigation" aria-label="Main navigation" className={`navbar-links ${menuOpen ? "open" : ""}`}>
 
                 <NavLink to="/garden" className="nav-link">
                     <House size={18} />

@@ -1,0 +1,8 @@
+.analytics-consent { position: fixed; z-index: 1000; right: 16px; bottom: 16px; display: flex; max-width: 580px; flex-wrap: wrap; align-items: center; gap: 10px; border: 2px solid #8d755f; border-radius: 14px; padding: 14px; color: #35251d; background: #fffdf5; box-shadow: 0 6px 24px #0003; text-align: left; }
+.analytics-consent p { flex: 1 1 100%; }
+.analytics-consent button { min-height: 44px; border: 1px solid #426f35; border-radius: 8px; padding: 8px 14px; color: #23451c; background: #edf6e6; font: inherit; font-weight: 700; cursor: pointer; }
+.account-deletion { margin-top: 36px; border: 2px solid #b35151; border-radius: 16px; padding: 20px; text-align: left; }
+.account-deletion label, .account-deletion input { display: block; margin-top: 10px; }
+.account-deletion input { min-height: 44px; width: min(100%, 360px); box-sizing: border-box; padding: 8px; }
+.account-deletion button { min-height: 44px; margin-top: 14px; border: 0; border-radius: 8px; padding: 8px 14px; color: white; background: #9d3030; font: inherit; font-weight: 700; cursor: pointer; }
+.account-deletion button:disabled { opacity: .6; cursor: not-allowed; }

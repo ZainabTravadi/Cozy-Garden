@@ -1,0 +1,10 @@
+{
+  "name": "Cozy Garden",
+  "short_name": "Cozy Garden",
+  "description": "A cozy pixel-art farming game.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#eaf5e3",
+  "theme_color": "#c8e7fd",
+  "icons": [{ "src": "/cozy-garden-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

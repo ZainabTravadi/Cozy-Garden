@@ -3,11 +3,34 @@ import User from "../models/User.js";
 import { requireAuth } from "../middleware/auth.js";
 import { toPublicUser } from "../utils/userResponse.js";
 import { normalizeGarden } from "../utils/garden.js";
+import bcrypt from "bcryptjs";
 
 const router = Router();
 const usernamePattern = /^[a-zA-Z0-9_]+$/;
 const avatarPattern = /^data:image\/(?:png|jpeg);base64,[A-Za-z0-9+/]+={0,2}$/;
 const maxAvatarLength = 2800000;
+
+router.delete("/account", requireAuth, async (req, res, next) => {
+  try {
+    const { password } = req.body || {};
+    if (typeof password !== "string" || !password) {
+      return res.status(400).json({ message: "Enter your password to delete your account." });
+    }
+    const user = await User.findById(req.user._id).select("+passwordHash");
+    if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+      return res.status(401).json({ message: "The password is incorrect." });
+    }
+    await User.deleteOne({ _id: user._id });
+    res.clearCookie("token", {
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: process.env.NODE_ENV === "production",
+    });
+    return res.status(204).end();
+  } catch (error) {
+    return next(error);
+  }
+});
 
 router.get("/profile", requireAuth, (req, res) => {
   const user = toPublicUser(req.user);

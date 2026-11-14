@@ -4,19 +4,29 @@ import LeaderboardRow from "../components/LeaderboardRow";
 import { apiRequest } from "../services/api";
 import trophyImage from "../assets/Golden-Trophy.png";
 import "../styles/leaderboard.css";
+import Seo from "../components/Seo";
+import { useAuth } from "../context/useAuth";
+import { trackEvent } from "../services/analytics";
 
 function Leaderboard() {
   const [leaderboard, setLeaderboard] = useState([]);
   const [error, setError] = useState("");
+  const { user } = useAuth();
 
   useEffect(() => {
     apiRequest("/leaderboard")
-      .then(({ leaderboard: rows }) => setLeaderboard(rows))
+      .then(({ leaderboard: rows, achievements = [] }) => {
+        setLeaderboard(rows);
+        for (const achievementId of achievements) {
+          if (!(user.achievements || []).includes(achievementId)) trackEvent("achievement_unlocked", { achievement_id: achievementId });
+        }
+      })
       .catch((requestError) => setError(requestError.message));
-  }, []);
+  }, [user.achievements]);
 
   return (
     <div className="leaderboard-page">
+      <Seo title="Leaderboard" description="See Cozy Garden player rankings." path="/leaderboard" noindex />
       <Navbar />
       <main className="leaderboard-content">
         <header className="leaderboard-heading">

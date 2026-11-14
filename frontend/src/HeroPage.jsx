@@ -4,9 +4,13 @@ import seedImage from "./assets/seed.png";
 import { Gamepad2, Info } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./HeroPage.css";
+import { useEffect } from "react";
+import { trackEvent } from "./services/analytics";
+import { Link } from "react-router-dom";
 
 function HeroPage() {
   const navigate = useNavigate();
+  useEffect(() => { trackEvent("landing_page_viewed"); }, []);
 
   return (
     <div
@@ -42,6 +46,9 @@ function HeroPage() {
             How to Play
           </button>
         </div>
+        <footer className="hero-footer">
+          <Link to="/privacy">Privacy</Link><Link to="/terms">Terms</Link><Link to="/cookies">Cookies</Link><Link to="/contact">Support</Link><Link to="/security">Security</Link>
+        </footer>
       </main>
     </div>
   );
